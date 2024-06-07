@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculate GPA</title>
+<style>
+    body {
+           background-color:rgb(115, 6, 28);
+           background-image: url("https://www.shutterstock.com/image-illustration/graduation-cap-degree-isolated-on-260nw-1430468858.jpg");
+           background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        text-align: center;
+        height: 100vh;
+        color: rgb(53, 3, 31);
+         }
+         .button {
+  background-color: #09c01eef;
+  border: none;
+  color: white;
+  padding: 8px 100px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+  </style>
+<script>
+   
+    function calculateGPA() {
+       
+        var totalCredits = 0;
+        var totalGradePoints = 0;
+        var errorMessage = "";
+        var results = ""; // Variable to store the details of each subject
+        
+        // Get the number of inputs from the user
+        var numInputs = parseInt(document.getElementById("numInputs").value);
+        
+        // Create a table to display the results
+        results += "<table border='1'>";
+        results += "<tr><th>Course Code</th><th>Name</th><th>Credit</th><th>Grade</th></tr>";
+        
+        // Iterate through each subject
+        for (var i = 0; i < numInputs; i++) {
+            // Get course name, course code, credit, and grade for each subject
+            var courseName = document.getElementsByName("course_name_" + (i + 1))[0].value;
+            var courseCode = document.getElementsByName("course_code_" + (i + 1))[0].value;
+            var credit = parseFloat(document.getElementsByName("credit_" + (i + 1))[0].value);
+            var grade = document.getElementsByName("grade_" + (i + 1))[0].value.toUpperCase(); // Convert grade to uppercase
+            
+            // Add row to the table
+            results += "<tr>";
+            results += "<td>" + courseCode + "</td>";
+            results += "<td>" + courseName + "</td>";
+            results += "<td>" + credit + "</td>";
+            results += "<td>" + grade + "</td>";
+            results += "</tr>";
+            
+            // Check if the grade is "U" (unsatisfactory)
+            if (grade === "U") {
+                errorMessage += "Course: " + courseName + ", Code: " + courseCode + ", Credit: " + credit + ", Grade: U - To Reapper.\n CGPA is computed only for the cadidates,who passed in all the courses. ";
+
+            } else {
+                // Calculate grade points for each subject
+                var gradePoints = 0;
+                switch (grade) {
+                    case "O":
+                        gradePoints = 10;
+                        break;
+                    case "A+":
+                        gradePoints = 9;
+                        break;
+                    case "A":
+                        gradePoints = 8;
+                        break;
+                    case "B+":
+                        gradePoints = 7;
+                        break;
+                    case "B":
+                        gradePoints = 6;
+                        break;
+                    case "C":
+                        gradePoints = 5;
+                        break;
+                    default:
+                        gradePoints = 0;
+                        errorMessage += "Course: " + courseName + ", Code: " + courseCode + ", Credit: " + credit + ", Grade: " + grade + " - Invalid Grade\n";
+                }
+                
+                // Update total credits and total grade points
+                totalCredits += credit;
+                totalGradePoints += credit * gradePoints;
+            }
+        }
+        
+        // Close the table
+        results += "</table>";
+        
+        // Display the table with course details
+        document.getElementById("subjectDetails").innerHTML = results;
+        
+        // If there are errors, display error message and stop GPA calculation
+        if (errorMessage !== "") {
+            document.getElementById("gpa").innerHTML = "Error! Unable to calculate CGPA due to the following issues:\n\n" + errorMessage;
+            return;
+        }
+        
+        // Calculate GPA
+        var gpa = totalGradePoints / totalCredits;
+        
+        // Display GPA
+        document.getElementById("gpa").innerHTML = "Overall GPA: " + gpa.toFixed(2) + " / 10";
+    
+    }
+    function calculateCGPAS(semesterGPAs) {
+    let totalGPA = 0;
+    let totalCredits = 0;
+    
+    for (let i = 0; i < semesterGPAs.length; i++) {
+        // Assuming each semester has equal credits, change accordingly if not
+        let credits = 1; // Change this if credits per semester are different
+        totalGPA += semesterGPAs[i] * credits;
+        totalCredits += credits;
+    }
+    
+    return totalGPA / totalCredits;
+}
+
+function calculateGPAS() {
+    const numSemesters = parseInt(prompt("Enter the number of semesters:"));
+    const semesterGPAs = [];
+    
+    for (let i = 1; i <= numSemesters; i++) {
+        const gpa = parseFloat(prompt("Enter the GPA for semester " + i + ":"));
+        semesterGPAs.push(gpa);
+    }
+    
+    return semesterGPAs;
+}
+
+function displayCGPAS() {
+    const semesterGPAs = calculateGPAS();
+    const cgpa = calculateCGPAS(semesterGPAs);
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = "<p>CGPA: " + cgpa.toFixed(2) + "</p>";
+}
+
+</script>
+</head>
+<body>
+    <fieldset>
+        <div id="output"></div>
+   <p style="font-size: 25px;color: rgb(5, 68, 140)"><b>KONGU ENGINEERING COLLEGE(AUTONOMOUS)</b></p>
+    <p style="color: rgba(107, 4, 125, 0.804)"><b>PERUNDURAI,ERODE-638 060.</b></p>
+    <p style="color: rgba(220, 20, 60, 0.858)"><b> CGPA CALCULATION </b></p>
+    <label for="numInputs"><b>Enter the number of subjects:</b></label>
+    <input type="number" id="numInputs" min="1" onchange="createInputs()"><br><br>
+    <div id="inputContainer"></div>
+    <button class="button" onclick="calculateGPA()" >Calculate GPA</button>
+    <button class="button" onclick="displayCGPAS()" >Calculate CGPA</button>
+    <div id="subjectDetails"></div>
+    <div id="gpa"></div>
+    </fieldset>
+    <script>
+        function createInputs() {
+           
+            // Get the number of inputs from the user
+            var numInputs = parseInt(document.getElementById("numInputs").value);
+            
+            // Get the container where inputs will be added
+            var container = document.getElementById("inputContainer");
+            
+            // Clear previous inputs
+            container.innerHTML = "";
+            
+            // Create new inputs based on user input
+            for (var i = 0; i < numInputs; i++) {
+                // Course name input
+                var courseNameInput = document.createElement("input");
+                courseNameInput.type = "text";
+                courseNameInput.placeholder = "Course Name";
+                courseNameInput.name = "course_name_" + (i + 1);
+                container.appendChild(courseNameInput);
+                
+                // Course code input
+                var courseCodeInput = document.createElement("input");
+                courseCodeInput.type = "text";
+                courseCodeInput.placeholder = "Course Code";
+                courseCodeInput.name = "course_code_" + (i + 1);
+                container.appendChild(courseCodeInput);
+                
+                // Credit input
+                var creditInput = document.createElement("input");
+                creditInput.type = "number";
+                creditInput.placeholder = "Credit";
+                creditInput.name = "credit_" + (i + 1);
+                container.appendChild(creditInput);
+                
+                // Grade input
+                var gradeInput = document.createElement("input");
+                gradeInput.type = "text";
+                gradeInput.placeholder = "Grade";
+                gradeInput.name = "grade_" + (i + 1);
+                container.appendChild(gradeInput);
+                
+                container.appendChild(document.createElement("br"));
+            }
+        
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.error {
+  color: red;
+}
+fieldset{
+  display:inline -block;
+  text-align:left;
+  background-color:rgb(20,220,190)
+}
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    place-items: center;
+    background-image: linear-gradient( to bottom right, rgba(79,51,176,1.0),rgba(210,53,165));  
+}
+
+.calculator {
+    position: relative;
+    height: auto;
+    width: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px #000;
+}
+.calculator {
+  background-color: #ffd0fb;
+    color: black;
+}
+</style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="calculator dark">
+    <h2 style="text-align:center; color:  red"> REGISTRATION FORM </h2>
+<form onsubmit="return validateForm()" method="post">
+
+<div>
+<label for="uname">User Name:</label>
+<input type="text" id="uname" name="uname" required>
+ <span id="unameError" class="error"></span><br><br>
+</div>
+
+<div>
+<label for="rno">Roll Number:</label>
+<input type="text" id="rno" name="rno" required>
+ <span id="rnoError" class="error"></span><br><br>
+</div>
+
+<div>
+<label for="email">Email ID:</label>
+<input type="email" id="email" name="email" required>
+ <span id="emailError" class="error"></span><br><br>
+</div>
+
+<div>
+<label for="pword">Password:</label>
+<input type="text" id="pword" name="pword" required oninput="togglePasswordVisibility(this)">
+ <span id="pwordError" class="error"></span><br><br>
+</div>
+
+<div>
+<label for="cpword">Confirm Password:</label>
+<input type="text" id="cpword" name="cpword" required oninput="togglePasswordVisibility(this)">
+ <span id="cpwordError" class="error"></span><br><br>
+</div>
+
+<div>
+<label for="phone">Phone Number:</label>
+<input type="text" id="phone" name="phone" required>
+ <span id="phoneError" class="error"></span><br><br>
+</div>
+
+<div>
+  <label for="drop">Department:</label>
+  <select name="subject" id="subject">
+    <option value="" selected="selected">Computer science and engineering</option>
+    <option value="">Information Technology</option>
+    <option value="">Artificial Intelligence and Data Science</option>
+    <option value="">Electrical and Electronic engineering</option>
+    <option value="">Civil engineering</option>
+  </select>
+</div>
+
+
+<div>
+<p>Technical Events:</p>
+  <input type="checkbox" id="te1" name="te" value="Paper Presentation">
+  <label for="te1"> TechMinds</label><br>
+  <input type="checkbox" id="te2" name="te" value="Code Crush">
+  <label for="te2"> Code Crush</label><br>
+  <input type="checkbox" id="te3" name="te" value="Tech Marketing">
+  <label for="te3">BrainStorm</label><br><br>
+</div>
+
+<div>
+<p>Non-technical Events:</p>
+  <input type="radio" id="thunt" name="ntevents" value="Treasure Hunt">
+  <label for="thunt">IPL Auction</label><br>
+  <input type="radio" id="ccook" name="ntevents" value="Cold Cooking">
+  <label for="ccook">Treasure Hunt</label><br>
+  <input type="radio" id="sbox" name="ntevents" value="Sound Box">
+  <label for="sbox">Cooking without fire</label><br><br>
+</div>
+
+<div>
+<input type="submit" value="Submit">
+<input type="reset" value="Reset">
+</div>
+</form>
+</div>
+</div>
+<script type="text/javascript">
+function validateForm() {
+
+  var name = document.getElementById("uname").value;
+  var rollNumber = document.getElementById("rno").value;
+  var password = document.getElementById("pword").value;
+  var confirmPassword = document.getElementById("cpword").value;
+  var phone = document.getElementById("phone").value;
+  var nameError = document.getElementById("unameError");
+  var rollNumberError = document.getElementById("rnoError");
+  var passwordError = document.getElementById("pwordError");
+  var confirmPasswordError = document.getElementById("cpwordError");
+  var phoneError = document.getElementById("phoneError");
+  var isValid = true;
+
+  // Name validation
+  if (!name || name.length < 6 || name.length > 10) {
+    nameError.textContent = "Name must be between 6 and 10 characters";
+    isValid = false;
+  } else {
+    nameError.textContent = "";
+  }
+
+  // Roll number format validation
+  var rollNumberRegex = /^\d{2}[A-Za-z]{3}\d{3}$/;
+  if (!rollNumberRegex.test(rollNumber)) {
+    rollNumberError.textContent = "Invalid roll number format (e.g., 22CSR001)";
+    isValid = false;
+  } else {
+    rollNumberError.textContent = "";
+  }
+
+  // Password validation
+  var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    passwordError.textContent = "Password must contain at least one lowercase letter, one uppercase letter, one numeric digit, one special character, and be at least 8 characters long";
+    isValid = false;
+  } else {
+    passwordError.textContent = "";
+  }
+
+  // Confirm password validation
+  if (password !== confirmPassword) {
+    confirmPasswordError.textContent = "Passwords do not match";
+    isValid = false;
+  } else {
+    confirmPasswordError.textContent = "";
+  }
+  // Phone number validation
+  var phoneRegex = /^\d{10}$/;
+  if (!phoneRegex.test(phone)) {
+    phoneError.textContent = "Invalid phone number format (10 digits)";
+    isValid = false;
+  } else {
+    phoneError.textContent = "";
+  }
+
+  // Check box validation
+  var checkboxes = document.querySelectorAll('input[type="checkbox"][name="te"]:checked');
+  if (checkboxes.length !== 2) {
+    alert("Please select exactly 2 technical events.");
+    isValid = false;
+  }
+
+  // Radio button validation
+  var radioButtons = document.querySelectorAll('input[type="radio"][name="ntevents"]:checked');
+  if (radioButtons.length !== 1) {
+    alert("Please select only one non-technical event.");
+    isValid = false;
+  }
+
+  // If form is valid, redirect to thank you page
+  if (isValid) {
+    window.location.href = "thankyou.html";
+  }
+
+  return isValid;
+}
+function togglePasswordVisibility(input) {
+  if (input.type === "password") {
+    input.type = "text";
+  } else {
+    input.type = "password";
+  }
+}
+</script>
+</body>
+</html>
